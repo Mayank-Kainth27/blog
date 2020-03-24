@@ -1,15 +1,14 @@
 //SurveyForm shows a form for a user to add input
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
-import SurveyField from './SurveyField';
+import BlogField from './BlogFields';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
-import formFields from './formFields';
-import validateEmails from '../../utils/validateEmails';
+import formFields from './blogformFields';
 
 
 
-class SurveyForm extends Component {
+class BlogForm extends Component {
     renderFields() {
         /*return (
             <div>
@@ -19,14 +18,11 @@ class SurveyForm extends Component {
                 <Field label="Recipients" type="text" name="recipients" component={SurveyField} />
             </div>
         );*/ //this static way
-        // if there is a error reduxForm will automatically 
-        // send it as a props to the field property here to its 
-        // respective field
         return _.map(formFields, ({ label, name }) => {
             return (
                 <Field
                     key={name}
-                    component={SurveyField}
+                    component={BlogField}
                     type="text"
                     label={label}
                     name={name}
@@ -34,14 +30,12 @@ class SurveyForm extends Component {
         });
 
     }
-    // handleSubmit is a function provided by reduxForm helper 
     render() {
         return (
             <div>
-                
-                <form onSubmit={this.props.handleSubmit(this.props.onSurveySubmit)} >
+                <form onSubmit={this.props.handleSubmit(this.props.onBlogSubmit)} >
                     {this.renderFields()}
-                    <Link to="/surveys" className="red btn-flat white-text">
+                    <Link to="/blogs" className="red btn-flat white-text">
                         Cancel
                         <i className="material-icons right">block</i>
                     </Link>
@@ -55,7 +49,7 @@ class SurveyForm extends Component {
     }
 }
 
-function validate(values){
+function validate(values) {
     const error = {};
     /*if (!values.title) {
         error.title = '*you must provide a title';
@@ -66,28 +60,24 @@ function validate(values){
     if (!values.body) {
         error.body = '*you must provide a body';
     }*/
-    error.recipients = validateEmails(values.recipients || '');
 
-    
     _.each(formFields, ({ name }) => {
         if (!values[name]) {
             //console.log(name);
-            error[name] = '*you must provide a value';
+            error[name] = `*you must provide a value to ${name}`;
             // you can customise it by adding a noValueError field 
-            //in array and passing it with name property and 
-            //assigning it to the error msg 
-            // also by using `${name}`
-       } 
+            //in array fornFields and passing it with name property and 
+            //assigning it to the error msg
+        }
     });
 
-    
+
 
     return error;
 }
-//this reduxForm
+
 export default reduxForm({
-    validate: validate, // to validate the feilds of the form
-    form: 'surveyForm',
-    destroyOnUnmount: false  // do not destroyes the data
-    // when we navgate b/w two windows i.e. form and review window
-})(SurveyForm);
+    validate: validate,
+    form: 'blogForm',
+    destroyOnUnmount: false
+})(BlogForm);
