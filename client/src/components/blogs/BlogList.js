@@ -19,7 +19,7 @@ class BlogList extends Component {
             return (
                 <div className="card darken-1" key={blog._id}>
                     <div className="card-content">
-                        <span className="card-title">
+                        <span className="card-title activator">
                             {blog.title}
                             <button className="btn-flat right" onClick={() => this.props.deleteBlog(blog._id, this.props.history)}>
                                 <i className="material-icons">
@@ -29,14 +29,15 @@ class BlogList extends Component {
                             <Link to='/blogSend' className="btn-flat right">
                                 <i className="material-icons">mail</i>
                             </Link>
-                            <button class="btn-flat right" onClick={()=> this.props.updateBlog(blog._id, this.props.history)}>
+                            <button class="btn-flat right" >
                                 <i className="material-icons">create</i>
                             </button>
                         </span>
-                            <p>
-                                {blog.body}
-                            </p>
-                        <p className="right 10em" style={{paddingTop: "1px"}}>
+                    </div>
+                    <div className="card-reveal">
+                        <span className="card-title">{blog.title}</span>
+                            <p>{blog.body}</p>
+                        <p className="right">
                             Created On: {new Date(blog.dateCreated).toLocaleDateString()}
                         </p>
                     </div>
@@ -59,4 +60,4 @@ function mapStateToProps(state) {
     return { blogs: state.blogs }
 }
 
-export default connect(mapStateToProps, { fetchBlogs, deleteBlog, updateBlog })(withRouter(BlogList));
+export default connect(mapStateToProps, { fetchBlogs, deleteBlog })(withRouter(BlogList));
